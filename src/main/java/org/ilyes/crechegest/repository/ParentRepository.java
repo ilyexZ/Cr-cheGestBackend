@@ -15,6 +15,7 @@ public interface ParentRepository extends JpaRepository<Parent, Long> {
     List<Parent> findByLastName(String lastName);
 
     Optional<Parent> findByEmail(String email);
+    Optional<Parent> findByPhone(String phone);
 
     @Query("SELECT p FROM Parent p WHERE p.firstName LIKE %:name% OR p.lastName LIKE %:name%")
     List<Parent> findByName(@Param("name") String name);

@@ -15,7 +15,12 @@ import java.util.Optional;
 
 @Repository
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
+    List<Attendance> findByChildId(Long childId);
     List<Attendance> findByDate(LocalDate date);
+    List<Attendance> findByDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Attendance> findByChildIdAndDateBetween(Long childId, LocalDate startDate, LocalDate endDate);
+    long countByDateAndIsPresentTrue(LocalDate date);
+    boolean existsByChildIdAndDate(Long childId, LocalDate date);
 
     List<Attendance> findByChildAndDateBetween(Child child, LocalDate startDate, LocalDate endDate);
 

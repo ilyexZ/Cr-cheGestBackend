@@ -1,6 +1,6 @@
 package org.ilyes.crechegest.model;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -18,6 +18,7 @@ public class Role {
     private String description;
 
     @OneToMany(mappedBy = "role")
+    @JsonIgnore // Prevent circular reference
     private List<User> users;
 
     public Role() {}

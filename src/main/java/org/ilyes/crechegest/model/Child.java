@@ -2,6 +2,7 @@ package org.ilyes.crechegest.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +30,8 @@ public class Child {
 
     @Column(name = "registration_date")
     private LocalDate registrationDate;
+    @Column(name = "active")
+    private Boolean active = true;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -36,14 +39,15 @@ public class Child {
             joinColumns = @JoinColumn(name = "child_id"),
             inverseJoinColumns = @JoinColumn(name = "parent_id")
     )
+    @JsonIgnore
     private List<Parent> parents;
 
     @OneToOne(mappedBy = "child", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MedicalInfo medicalInfo;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
     private List<Attendance> attendances;
-
+    @JsonIgnore
     @ManyToMany(mappedBy = "participants")
     private List<Activity> activities;
 
@@ -144,5 +148,12 @@ public class Child {
 
     public void setActivities(List<Activity> activities) {
         this.activities = activities;
+    }
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

@@ -14,6 +14,7 @@ import java.util.List;
 @Repository
 public interface ChildRepository extends JpaRepository<Child, Long> {
     List<Child> findByLastName(String lastName);
+    List<Child> findByActiveTrue();
 
     @Query("SELECT c FROM Child c WHERE c.firstName LIKE %:name% OR c.lastName LIKE %:name%")
     List<Child> findByName(@Param("name") String name);

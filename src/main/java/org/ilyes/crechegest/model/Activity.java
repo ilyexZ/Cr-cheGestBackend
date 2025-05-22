@@ -1,6 +1,7 @@
 package org.ilyes.crechegest.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -42,7 +43,7 @@ public class Activity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "educator_id")
     private User educator;
-
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "activity_child",

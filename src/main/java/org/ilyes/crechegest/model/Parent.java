@@ -1,6 +1,7 @@
 package org.ilyes.crechegest.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class Parent {
 
     @Column(name = "emergency_contact")
     private boolean emergencyContact;
-
+    @JsonIgnore
     @ManyToMany(mappedBy = "parents")
     private List<Child> children;
 

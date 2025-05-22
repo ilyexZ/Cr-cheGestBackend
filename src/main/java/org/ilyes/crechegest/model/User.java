@@ -1,4 +1,6 @@
 package org.ilyes.crechegest.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class User {
     private String username;
 
     @Column(nullable = false)
+    @JsonIgnore // Hide password from JSON responses
     private String password;
 
     @Column(nullable = false)
@@ -29,9 +32,6 @@ public class User {
 
     @Column(nullable = false)
     private boolean active = true;
-
-    @OneToMany(mappedBy = "user")
-    private List<Message> sentMessages;
 
     public User() {}
 
@@ -107,13 +107,5 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public List<Message> getSentMessages() {
-        return sentMessages;
-    }
-
-    public void setSentMessages(List<Message> sentMessages) {
-        this.sentMessages = sentMessages;
     }
 }
