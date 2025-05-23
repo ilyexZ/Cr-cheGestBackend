@@ -28,12 +28,15 @@ public class Parent {
 
     @Column(name = "emergency_contact")
     private boolean emergencyContact;
-    @JsonIgnore
-    @ManyToMany(mappedBy = "parents")
+
+    // Changed from ManyToMany to OneToMany - parent can have multiple children
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore // Prevent serialization of children when saving parent
     private List<Child> children;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore // Prevent serialization of user details
     private User user;
 
     public Parent() {}

@@ -3,6 +3,7 @@ package org.ilyes.crechegest.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -30,26 +31,20 @@ public class Child {
 
     @Column(name = "registration_date")
     private LocalDate registrationDate;
+
     @Column(name = "active")
     private Boolean active = true;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "child_parent",
-            joinColumns = @JoinColumn(name = "child_id"),
-            inverseJoinColumns = @JoinColumn(name = "parent_id")
-    )
-    @JsonIgnore
-    private List<Parent> parents;
+    // Changed from ManyToMany to ManyToOne - single parent per child
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    @JsonIgnoreProperties("children") // Ignore parent's children when serializing child
+    private Parent parent;
 
     @OneToOne(mappedBy = "child", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MedicalInfo medicalInfo;
-    @JsonIgnore
-    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
-    private List<Attendance> attendances;
-    @JsonIgnore
-    @ManyToMany(mappedBy = "participants")
-    private List<Activity> activities;
+
+
 
     public Child() {}
 
@@ -118,12 +113,12 @@ public class Child {
         this.registrationDate = registrationDate;
     }
 
-    public List<Parent> getParents() {
-        return parents;
+    public Parent getParent() {
+        return parent;
     }
 
-    public void setParents(List<Parent> parents) {
-        this.parents = parents;
+    public void setParent(Parent parent) {
+        this.parent = parent;
     }
 
     public MedicalInfo getMedicalInfo() {
@@ -134,21 +129,9 @@ public class Child {
         this.medicalInfo = medicalInfo;
     }
 
-    public List<Attendance> getAttendances() {
-        return attendances;
-    }
 
-    public void setAttendances(List<Attendance> attendances) {
-        this.attendances = attendances;
-    }
 
-    public List<Activity> getActivities() {
-        return activities;
-    }
 
-    public void setActivities(List<Activity> activities) {
-        this.activities = activities;
-    }
     public Boolean getActive() {
         return active;
     }

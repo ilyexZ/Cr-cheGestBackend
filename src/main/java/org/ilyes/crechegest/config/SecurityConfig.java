@@ -22,30 +22,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .csrf(csrf -> csrf.disable())
-//                .authorizeHttpRequests(authz -> authz
-//                        .requestMatchers(
-//                                "/api/auth/**",
-//                                "/swagger-ui/**",
-//                                "/v3/api-docs/**",
-//                                "/swagger-resources/**",
-//                                "/webjars/**"
-//                        ).permitAll()
-//                        .requestMatchers("/api/users/**").hasAnyRole("ADMIN")
-//                        .requestMatchers("/api/children/**").hasAnyRole("ADMIN", "EDUCATOR")
-//                        .requestMatchers("/api/attendance/**").hasAnyRole("ADMIN", "EDUCATOR")
-//                        .requestMatchers("/api/activities/**").hasAnyRole("ADMIN", "EDUCATOR")
-//                        .requestMatchers("/api/parents/**").hasAnyRole("ADMIN", "PARENT")
-//                        .anyRequest().authenticated()
-//                )
-//                .httpBasic(httpBasic -> {});
-//
-//        return http.build();
-//    }
+
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http

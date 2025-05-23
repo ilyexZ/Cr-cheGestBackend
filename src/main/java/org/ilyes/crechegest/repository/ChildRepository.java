@@ -21,11 +21,10 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
 
     List<Child> findByBirthDateBetween(LocalDate start, LocalDate end);
 
-    List<Child> findByParentsContaining(Parent parent);
+/*    List<Child> findByParent(Parent parent);*/
 
-    @Query("SELECT c FROM Child c JOIN c.parents p WHERE p.id = :parentId")
+    @Query("SELECT c FROM Child c JOIN c.parent p WHERE p.id = :parentId")
     List<Child> findByParentId(@Param("parentId") Long parentId);
 
-    @Query("SELECT DISTINCT c FROM Child c JOIN c.attendances a WHERE a.date = :date AND a.isPresent = true")
-    List<Child> findPresentChildrenByDate(@Param("date") LocalDate date);
+
 }

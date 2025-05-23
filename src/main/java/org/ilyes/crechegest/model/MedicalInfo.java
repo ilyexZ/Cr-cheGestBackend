@@ -1,6 +1,7 @@
 package org.ilyes.crechegest.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class MedicalInfo {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id", referencedColumnName = "id")
+    @JsonIgnore // Prevent recursion
     private Child child;
 
     @Column(name = "blood_type")
