@@ -1,8 +1,10 @@
 package org.ilyes.crechegest.controller;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.ilyes.crechegest.model.Parent;
 import org.ilyes.crechegest.model.Role;
 import org.ilyes.crechegest.model.User;
+import org.ilyes.crechegest.service.EmailService;
 import org.ilyes.crechegest.service.ParentService;
 import org.ilyes.crechegest.service.impl.RoleServiceImpl;
 import org.ilyes.crechegest.service.impl.UserServiceImpl;
@@ -36,36 +38,51 @@ public class ParentController {
         return parent.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping
     public ResponseEntity<?> createParent(@RequestBody CreateParentRequest request) {
-        // 1. Create User first
+        // Generate random password
+        String generatedPassword = RandomStringUtils.randomAlphanumeric(8);
+
+        // Create User
         User newUser = new User();
-        newUser.setUsername(request.getUsername());
-        newUser.setPassword(request.getPassword());
+        newUser.setUsername(request.getEmail()); // Use email as username
+        newUser.setPassword(generatedPassword);
         newUser.setFullName(request.getFirstName() + " " + request.getLastName());
         newUser.setEmail(request.getEmail());
         newUser.setPhone(request.getPhone());
 
-        // Assign PARENT role (fetch from DB)
+        // Assign PARENT role
         Optional<Role> parentRole = roleServiceImpl.findByName("PARENT");
         if (parentRole.isEmpty()) {
             return ResponseEntity.badRequest().body("PARENT role not found");
         }
         newUser.setRole(parentRole.get());
-        User savedUser = userServiceImpl.save(newUser);
 
-        // 2. Create Parent and link to the User
-        Parent parent = new Parent();
-        parent.setFirstName(request.getFirstName());
-        parent.setLastName(request.getLastName());
-        parent.setEmail(request.getEmail());
-        parent.setPhone(request.getPhone());
-        parent.setAddress(request.getAddress());
-        parent.setEmergencyContact(request.isEmergencyContact());
-        parent.setUser(savedUser); // Link to the new User
+        try {
+            User savedUser = userServiceImpl.save(newUser);
 
-        Parent savedParent = parentService.save(parent);
-        return ResponseEntity.ok(savedParent);
+            // Create Parent
+            Parent parent = new Parent();
+            parent.setFirstName(request.getFirstName());
+            parent.setLastName(request.getLastName());
+            parent.setEmail(request.getEmail());
+            parent.setPhone(request.getPhone());
+            parent.setAddress(request.getAddress());
+            parent.setEmergencyContact(request.isEmergencyContact());
+            parent.setUser(savedUser);
+
+            Parent savedParent = parentService.save(parent);
+
+            // Send email with credentials
+            emailService.sendCredentialsEmail(request.getEmail(), generatedPassword);
+
+            return ResponseEntity.ok(savedParent);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error creating parent: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -93,8 +110,6 @@ public class ParentController {
         private String phone;
         private String address;
         private boolean emergencyContact;
-        private String username;
-        private String password;
 
         // Getters
         public String getFirstName() { return firstName; }
@@ -103,8 +118,7 @@ public class ParentController {
         public String getPhone() { return phone; }
         public String getAddress() { return address; }
         public boolean isEmergencyContact() { return emergencyContact; }
-        public String getUsername() { return username; }
-        public String getPassword() { return password; }
+
 
         // Setters
         public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -113,7 +127,6 @@ public class ParentController {
         public void setPhone(String phone) { this.phone = phone; }
         public void setAddress(String address) { this.address = address; }
         public void setEmergencyContact(boolean emergencyContact) { this.emergencyContact = emergencyContact; }
-        public void setUsername(String username) { this.username = username; }
-        public void setPassword(String password) { this.password = password; }
+
     }
 }
