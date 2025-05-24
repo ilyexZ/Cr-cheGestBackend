@@ -46,7 +46,7 @@ public class ChildController {
         child.setLastName(request.getLastName());
         child.setBirthDate(request.getBirthDate());
         child.setGender(request.getGender());
-        child.setNotes(request.getNotes());
+        child.setMedicalInfo(request.getMedicalInfo());
         child.setParent(parentOpt.get());
         child.setRegistrationDate(LocalDate.now());
         child.setActive(true);
@@ -69,6 +69,7 @@ public class ChildController {
         child.setGender(request.getGender());
         child.setNotes(request.getNotes());
         child.setActive(request.getActive());
+        child.setMedicalInfo(request.getMedicalInfo());
 
         // Update parent if provided
         if (request.getParentId() != null) {
@@ -109,7 +110,14 @@ public class ChildController {
         private String lastName;
         private LocalDate birthDate;
         private String gender;
-        private String notes;
+
+
+        private String medicalInfo;
+
+        public String getMedicalInfo() {
+            return medicalInfo;
+        }
+
         private Long parentId;
 
         // Getters and Setters
@@ -125,8 +133,7 @@ public class ChildController {
         public String getGender() { return gender; }
         public void setGender(String gender) { this.gender = gender; }
 
-        public String getNotes() { return notes; }
-        public void setNotes(String notes) { this.notes = notes; }
+
 
         public Long getParentId() { return parentId; }
         public void setParentId(Long parentId) { this.parentId = parentId; }
@@ -140,6 +147,15 @@ public class ChildController {
         private String notes;
         private Long parentId;
         private Boolean active;
+        private String medicalInfo;
+
+        public String getMedicalInfo() {
+            return medicalInfo;
+        }
+
+        public void setMedicalInfo(String medicalInfo) {
+            this.medicalInfo = medicalInfo;
+        }
 
         // Getters and Setters
         public String getFirstName() { return firstName; }
